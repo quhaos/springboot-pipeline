@@ -27,32 +27,23 @@ pipeline {
                 checkout scm
             }
         }
-        stage('build') { 
+        stage('build and unit test') {
             steps {
             withMaven(maven:'Maven 3.6'){
-                sh 'mvn -B -DskipTests clean package'
+                sh 'mvn -B  clean org.jacoco:jacoco-maven-plugin:report install'
                 }
             }
         }
-        stage('unit test') {
+        stage('sonar analyze') {
             steps {
             withMaven(maven:'Maven 3.6'){
-                sh 'mvn test'
+                sh 'mvn sonar:sonar'
             }
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
             }
         }
         stage('docker build and push'){
             steps{
                 script{
-
-                echo "${env.BRANCH_NAME}"
-                echo "${env.GIT_COMMIT}"
-                echo "${env.build_tag}"
 
                 def tagVersion = "${env.msid}-${env.BRANCH_NAME}-${env.build_tag}-${env.environment}"
 
