@@ -20,7 +20,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <sonar.login>sqp_5fdc4c97036bc5b1ec49dca3214657ade6785f52</sonar.login>
-        <sonar.host.url>http://localhost:9000</sonar.host.url>
+        <sonar.host.url>http://192.168.1.10:9000</sonar.host.url>
         <sonar.projectKey>app</sonar.projectKey>
     </properties>
 <dependencies>
