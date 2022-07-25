@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+    options{
+        timestamps()
+        ansiColor('xterm')
+        skipDefaultCheckout true   
+        disableConcurrentBuilds()
+    }
+    environment{
+        msid = 'ipac-fm'
+        environment = 'test'
+        build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+		//DOCKERHUB_CREDENTIALS = credentials("docker")
+
+    }
+    stages {
+        stage('clean ws'){
+            steps{
+                cleanWs()
+            }
+        }
+        stage('checkout code from repository'){
+            steps{
+                deleteDir()
+                checkout scm
+            }
+        }
+        stage('build') { 
+            steps {
+            withMaven(maven:'Maven 3.6'){
+                sh 'mvn -B -DskipTests clean package'
+                }
+            }
+        }
+        stage('unit test') {
+            steps {
+            withMaven(maven:'Maven 3.6'){
+                sh 'mvn test'
+            }
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+        stage('docker build and push'){
+            steps{
+                script{
+
+                echo "${env.BRANCH_NAME}"
+                echo "${env.GIT_COMMIT}"
+                echo "${env.build_tag}"
+
+                def tagVersion = "${env.msid}-${env.BRANCH_NAME}-${env.build_tag}-${env.environment}"
+
+                sh "docker build -t ${env.msid}/app:${tagVersion} ."
+
+                //sh 'echo ${env.DOCKERHUB_CREDENTIALS_PSW} | docker login -u ${env.DOCKERHUB_CREDENTIALS_USR} --password-stdin'
+
+                //sh 'docker push ${env.msid}/app:${tagVersion}'
+                }
+            }
+        }
+}
+}
+}
