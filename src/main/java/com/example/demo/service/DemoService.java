@@ -14,5 +14,8 @@ public class DemoService {
         public void method2(){
             System.out.println("TestService -> method2");
         }
+        public String print(String name){
+        return name;
+        }
     }
 
