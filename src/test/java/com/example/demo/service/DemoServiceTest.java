@@ -13,9 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @RunWith(MockitoJUnitRunner.class)
 class DemoServiceTest {
 
-    @Autowired
-    @InjectMocks
-    private DemoService testService;
 
     @BeforeAll
     public static void beforeAll() {
@@ -37,13 +34,4 @@ class DemoServiceTest {
         System.out.println("TestServiceTest -> @BeforeEach");
     }
 
-    @Test
-    void method1() {
-        testService.method1();
-    }
-
-    @Test
-    void method2() {
-        testService.method2();
-    }
 }
