@@ -9,6 +9,8 @@ pipeline {
     environment{
         msid = 'ipac-fm'
         environment = 'test'
+        //build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+        build_tag = '3fc6e71'
         BRANCH_NAME ='master'
 		//DOCKERHUB_CREDENTIALS = credentials("docker")
 
@@ -50,8 +52,9 @@ pipeline {
 
                 echo "${env.BRANCH_NAME}"
                 echo "${env.GIT_COMMIT}"
+                echo "${env.build_tag}"
 
-                def tagVersion = "${env.msid}-${env.BRANCH_NAME}-${env.GIT_COMMIT}-${env.environment}"
+                def tagVersion = "${env.msid}-${env.BRANCH_NAME}-${env.build_tag}-${env.environment}"
 
                 sh "docker build -t ${env.msid}/app:${tagVersion} ."
 
