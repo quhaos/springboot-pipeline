@@ -11,6 +11,7 @@ pipeline {
         environment = 'test'
         //build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
         build_tag = '3fc6e71'
+        BRANCH_NAME ='master'
 		//DOCKERHUB_CREDENTIALS = credentials("docker")
 
     }
